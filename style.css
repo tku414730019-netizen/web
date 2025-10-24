@@ -1,0 +1,53 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: -200px;
+    width: 200px;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease;
+}
+
+.sidebar-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.link-item {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.link-item:first-child {
+    margin-top: 70px;
+}
+
+#iframe-container {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background-color: white;
+    display: none;
+}
+
+#content-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}

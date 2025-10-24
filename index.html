@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sketch</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+  </head>
+  <body>
+    <div id="sidebar">
+      <div class="sidebar-content">
+        <a href="#" class="link-item" data-url="https://tku414730019-netizen.github.io/bubble-pop-game/">作品一</a>
+        <a href="#" class="link-item" data-url="https://hackmd.io/@Tkurebeccaaa211/SJ6go_1nel">筆記</a>
+      </div>
+    </div>
+    <div id="iframe-container">
+      <iframe id="content-frame" src=""></iframe>
+    </div>
+    <script src="sketch.js"></script>
+    <script>
+      window.addEventListener('load', function() {
+        const sidebar = document.getElementById('sidebar');
+        const iframeContainer = document.getElementById('iframe-container');
+        const contentFrame = document.getElementById('content-frame');
+
+        // 偵測滑鼠靠近左邊界
+        document.addEventListener('mousemove', function(e) {
+          if (e.clientX < 50) {
+            sidebar.style.left = '0px';
+          } else {
+            const sidebarRect = sidebar.getBoundingClientRect();
+            if (e.clientX > sidebarRect.right) {
+              sidebar.style.left = '-200px';
+            }
+          }
+        });
+
+        // 當滑鼠在側邊欄上時保持顯示
+        sidebar.addEventListener('mouseenter', function() {
+          sidebar.style.left = '0px';
+        });
+
+        // 當滑鼠離開側邊欄時隱藏
+        sidebar.addEventListener('mouseleave', function() {
+          sidebar.style.left = '-200px';
+        });
+
+        // 點擊連結開啟 iframe
+        const linkItems = document.querySelectorAll('.link-item');
+        linkItems.forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = link.getAttribute('data-url');
+            contentFrame.src = url;
+            iframeContainer.style.display = 'block';
+          });
+        });
+
+        // 點擊 iframe 容器外的區域關閉 iframe
+        document.addEventListener('click', function(e) {
+          if (!iframeContainer.contains(e.target) && !sidebar.contains(e.target)) {
+            iframeContainer.style.display = 'none';
+          }
+        });
+
+        // 防止點擊 iframe 本身時關閉
+        iframeContainer.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+    </script>
+  </body>
+</html>
