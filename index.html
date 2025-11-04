@@ -7,23 +7,163 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
+    <style>
+      /* 側邊欄基本設定 */
+      #sidebar {
+        position: fixed;
+        left: -200px;
+        top: 0;
+        width: 200px;
+        height: 100%;
+        background-color: #465A65;
+        transition: left 0.3s ease;
+        z-index: 10;
+        padding-top: 20px;
+      }
+    
+      .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 10px;
+        height: calc(100% - 20px);
+      }
+      
+      .spacer {
+        flex-grow: 1;
+      }
+    
+      .link-item {
+        color: white;
+        text-decoration: none;
+        margin: 8px 0;
+        transition: color 0.3s ease;
+        cursor: pointer;
+        display: inline-block;
+      }
+    
+      .link-item:hover {
+        color: #AEBBC0;
+      }
+    
+      /* 子選單樣式（距離修正） */
+      .submenu {
+        max-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding-left: 8px;
+        transition: max-height 0.3s ease, margin-top 0.3s ease;
+        margin-top: 0;
+      }
+    
+      .submenu a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        margin: 22px 0;
+        transition: color 0.3s ease;
+      }
+    
+      .submenu a:hover {
+        color: #AEBBC0;
+      }
+    
+      .has-submenu {
+        position: relative;
+        margin-bottom: 20px;
+      }
+    
+      .triangle {
+        display: inline-block;
+        margin-left: 4px;
+        transition: transform 0.3s ease;
+      }
+    
+      .has-submenu:hover .triangle {
+        transform: rotate(90deg);
+      }
+    
+      .has-submenu:hover .submenu {
+        max-height: 200px;
+        margin-top: 0px;
+      }
+    
+      /* iframe 容器 */
+      #iframe-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: none;
+        z-index: 5;
+      }
+    
+      #content-frame {
+        width: 80%;
+        height: 80%;
+        border: none;
+        display: block;
+        margin: 50px auto;
+        border-radius: 10px;
+        background: white;
+      }
+    
+      /* 關閉按鈕 */
+      #close-btn {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+        z-index: 15;
+        display: none;
+        transition: color 0.3s;
+      }
+    
+      #close-btn:hover {
+        color: #AEBBC0;
+      }
+    </style>
+    
   </head>
   <body>
     <div id="sidebar">
       <div class="sidebar-content">
         <a href="#" class="link-item" data-url="https://tku414730019-netizen.github.io/bubble-pop-game/">作品一</a>
-        <a href="#" class="link-item" data-url="https://hackmd.io/@Tkurebeccaaa211/SJ6go_1nel">筆記</a>
+        <a href="#" class="link-item" data-url="https://hackmd.io/@Tkurebeccaaa211/SJ6go_1nel">作品一筆記</a>
+        <a href="#" class="link-item" data-url="https://tku414730019-netizen.github.io/testing/">線上測驗系統</a>
+        <a href="#" class="link-item" data-url="https://hackmd.io/@Tkurebeccaaa211/HkmrUkDybg">選單筆記</a>
+        
+        <div class="spacer"></div>
+        
+        <div class="has-submenu">
+          <a href="#" class="link-item" data-url="https://www.tku.edu.tw/">淡江大學
+            <span class="triangle">▶</span>
+          </a>
+          <div class="submenu">
+            <a href="#" class="link-item" data-url="https://www.et.tku.edu.tw/">教育科技學系</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- iframe 容器與關閉按鈕 -->
     <div id="iframe-container">
       <iframe id="content-frame" src=""></iframe>
     </div>
+    <div id="close-btn">✕</div>
+
     <script src="sketch.js"></script>
     <script>
       window.addEventListener('load', function() {
         const sidebar = document.getElementById('sidebar');
         const iframeContainer = document.getElementById('iframe-container');
         const contentFrame = document.getElementById('content-frame');
+        const closeBtn = document.getElementById('close-btn');
 
         // 偵測滑鼠靠近左邊界
         document.addEventListener('mousemove', function(e) {
@@ -53,22 +193,32 @@
           link.addEventListener('click', function(e) {
             e.preventDefault();
             const url = link.getAttribute('data-url');
-            contentFrame.src = url;
-            iframeContainer.style.display = 'block';
+            if (url) {
+              contentFrame.src = url;
+              iframeContainer.style.display = 'block';
+              closeBtn.style.display = 'block';
+            }
           });
         });
 
-        // 點擊 iframe 容器外的區域關閉 iframe
+        // 點擊空白處或叉叉關閉 iframe
+        function closeIframe() {
+          iframeContainer.style.display = 'none';
+          closeBtn.style.display = 'none';
+          contentFrame.src = '';
+        }
+
         document.addEventListener('click', function(e) {
           if (!iframeContainer.contains(e.target) && !sidebar.contains(e.target)) {
-            iframeContainer.style.display = 'none';
+            closeIframe();
           }
         });
 
-        // 防止點擊 iframe 本身時關閉
         iframeContainer.addEventListener('click', function(e) {
-          e.stopPropagation();
+          if (e.target === iframeContainer) closeIframe();
         });
+
+        closeBtn.addEventListener('click', closeIframe);
       });
     </script>
   </body>
