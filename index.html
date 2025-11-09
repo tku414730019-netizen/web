@@ -46,22 +46,22 @@
         color: #AEBBC0;
       }
     
-      /* 子選單樣式（距離修正） */
+      /* 子選單樣式 */
       .submenu {
         max-height: 0;
         overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        padding-left: 15px;
+        padding-top: 0;
         display: flex;
         flex-direction: column;
-        padding-left: 8px;
-        transition: max-height 0.3s ease, margin-top 0.3s ease;
-        margin-top: 0;
       }
     
       .submenu a {
         color: white;
         text-decoration: none;
-        font-size: 18px;
-        margin: 22px 0;
+        font-size: 14px;
+        margin: 5px 0;
         transition: color 0.3s ease;
       }
     
@@ -71,7 +71,8 @@
     
       .has-submenu {
         position: relative;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
+        display: inline-block;
       }
     
       .triangle {
@@ -84,10 +85,13 @@
         transform: rotate(90deg);
       }
     
-      .has-submenu:hover .submenu {
+      /* 僅當滑鼠直接在主連結或子選單上時才展開 */
+      .has-submenu > a:hover + .submenu,
+      .submenu:hover {
         max-height: 200px;
-        margin-top: 0px;
+        padding-top: 5px;
       }
+
     
       /* iframe 容器 */
       #iframe-container {
@@ -138,16 +142,16 @@
         <a href="#" class="link-item" data-url="https://tku414730019-netizen.github.io/testing/">線上測驗系統</a>
         <a href="#" class="link-item" data-url="https://hackmd.io/@Tkurebeccaaa211/HkmrUkDybg">選單筆記</a>
         
-        <div class="spacer"></div>
-        
+        <!-- 淡江大學項目與子選單 -->
         <div class="has-submenu">
-          <a href="#" class="link-item" data-url="https://www.tku.edu.tw/">淡江大學
-            <span class="triangle">▶</span>
+          <a href="#" class="link-item" data-url="https://www.tku.edu.tw/">
+            淡江大學<span class="triangle">▸</span>
           </a>
           <div class="submenu">
-            <a href="#" class="link-item" data-url="https://www.et.tku.edu.tw/">教育科技學系</a>
+            <a href="#" data-url="https://www.et.tku.edu.tw/">教育科技學系</a>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -187,8 +191,8 @@
           sidebar.style.left = '-200px';
         });
 
-        // 點擊連結開啟 iframe
-        const linkItems = document.querySelectorAll('.link-item');
+        // 點擊連結開啟 iframe（包含主選單和子選單）
+        const linkItems = document.querySelectorAll('.link-item, .submenu a');
         linkItems.forEach(function(link) {
           link.addEventListener('click', function(e) {
             e.preventDefault();
