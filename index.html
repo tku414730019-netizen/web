@@ -60,7 +60,7 @@
       .submenu a {
         color: white;
         text-decoration: none;
-        font-size: 14px;
+        font-size: 18px;
         margin: 5px 0;
         transition: color 0.3s ease;
       }
@@ -92,7 +92,6 @@
         padding-top: 5px;
       }
 
-    
       /* iframe 容器 */
       #iframe-container {
         position: fixed;
@@ -131,8 +130,46 @@
       #close-btn:hover {
         color: #AEBBC0;
       }
-    </style>
+
+      /* 右上角個人資訊區塊 */
+      #profile-section {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 4;
+        text-align: right;
+      }
     
+      #profile-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: block;
+        margin-left: auto;
+        margin-bottom: 8px;
+        border: 3px solid #465A65;
+      }
+    
+      #profile-image:hover {
+        transform: scale(1.15);
+      }
+    
+      .profile-text {
+        color: #465A65;
+        font-size: 20px;
+        line-height: 1.6;
+        transition: font-weight 0.3s ease;
+        cursor: default;
+        font-weight: normal;
+      }
+    
+      .profile-text:hover {
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <div id="sidebar">
@@ -151,8 +188,14 @@
             <a href="#" data-url="https://www.et.tku.edu.tw/">教育科技學系</a>
           </div>
         </div>
-
       </div>
+    </div>
+
+    <!-- 右上角個人資訊 -->
+    <div id="profile-section">
+      <img id="profile-image" src="me.png" alt="個人照片">
+      <div class="profile-text">淡江大學 教育科技學系</div>
+      <div class="profile-text">414730019 王O嘉</div>
     </div>
 
     <!-- iframe 容器與關閉按鈕 -->
@@ -181,20 +224,13 @@
           }
         });
 
-        // 當滑鼠在側邊欄上時保持顯示
-        sidebar.addEventListener('mouseenter', function() {
-          sidebar.style.left = '0px';
-        });
+        sidebar.addEventListener('mouseenter', () => sidebar.style.left = '0px');
+        sidebar.addEventListener('mouseleave', () => sidebar.style.left = '-200px');
 
-        // 當滑鼠離開側邊欄時隱藏
-        sidebar.addEventListener('mouseleave', function() {
-          sidebar.style.left = '-200px';
-        });
-
-        // 點擊連結開啟 iframe（包含主選單和子選單）
+        // 點擊連結開啟 iframe
         const linkItems = document.querySelectorAll('.link-item, .submenu a');
-        linkItems.forEach(function(link) {
-          link.addEventListener('click', function(e) {
+        linkItems.forEach(link => {
+          link.addEventListener('click', e => {
             e.preventDefault();
             const url = link.getAttribute('data-url');
             if (url) {
@@ -205,23 +241,19 @@
           });
         });
 
-        // 點擊空白處或叉叉關閉 iframe
+        // 關閉 iframe
         function closeIframe() {
           iframeContainer.style.display = 'none';
           closeBtn.style.display = 'none';
           contentFrame.src = '';
         }
 
-        document.addEventListener('click', function(e) {
-          if (!iframeContainer.contains(e.target) && !sidebar.contains(e.target)) {
-            closeIframe();
-          }
+        document.addEventListener('click', e => {
+          if (!iframeContainer.contains(e.target) && !sidebar.contains(e.target)) closeIframe();
         });
-
-        iframeContainer.addEventListener('click', function(e) {
+        iframeContainer.addEventListener('click', e => {
           if (e.target === iframeContainer) closeIframe();
         });
-
         closeBtn.addEventListener('click', closeIframe);
       });
     </script>
